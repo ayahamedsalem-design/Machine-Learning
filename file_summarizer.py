@@ -29,7 +29,7 @@ def extract_text_from_file(file_path: str) -> str:
         raise ValueError("File format not supported please choose file type .txt or .pdf")
 
 # Summarize Function
-def summarize_content(text: str, model: str = "llama3.2") -> str:
+def summarize_content(text: str, model: str = "llama3.2:1b") -> str:  # use "llama3.2" or "llama3.2:1b" Model
     """To summarize send the content to Ollama model"""
     if not text.strip():
         return "The File is empty or doesn't have readable text."
@@ -48,7 +48,9 @@ def summarize_content(text: str, model: str = "llama3.2") -> str:
             {"role": "user", "content": f"Here is file that needs to be summarized:\n\n{text}"}
         ],
         options={
-            "temperature": 0.2  # High focus and precision
+            "temperature": 0.0,      # 0.0 makes the output strictly deterministic
+            "top_p": 0.1,
+            "num_ctx": 4096
         }
     )
 
