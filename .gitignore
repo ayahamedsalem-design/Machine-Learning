@@ -108,3 +108,4 @@ predictions/
 *~
 .DS_Store
 Thumbs.db
+*.sqlite3
