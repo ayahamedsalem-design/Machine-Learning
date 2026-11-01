@@ -1,0 +1,40 @@
+
+ 
+============================================================
+Hybrid RAG Response: Neural Network
+============================================================
+1. The network achieved top-1 and top-5 error rates of **37.5%** and **17.0%** on the ImageNet LSVRC-2010 contest test data.  
+2. The network has **60 million parameters** and **650,000 neurons**.
+3.The winning top-5 test error rate was **15.3%**.
+4. The images were down-sampled to a fixed resolution of 256×256: each rectangular image was first rescaled so that its shorter side had length 256, and then a central 256×256 patch was cropped from the resulting image. The only other preprocessing mentioned was subtracting the mean activity over the training set from each pixel.  
+5. The answer isn't exist in the given pdf.
+6.The authors chose ReLUs because, in terms of training time with gradient descent, saturating nonlinearities such as tanh are much slower than the non-saturating ReLU \(f(x)=\max(0,x)\). They note that networks with ReLUs consistently learn several times faster than equivalent networks with saturating neurons—for example, six times faster than an equivalent network with tanh neurons.
+7. The answer isn't exist in the given pdf.
+8. The specific hyperparameter values chosen for Local Response Normalization (LRN) are: **k = 2, n = 5, α = 10⁻⁴, and β = 0.75**.
+9. Overlapping pooling is defined as pooling where neighboring pooling units overlap: the pooling layer is a grid of units spaced \(s\) pixels apart, and each unit summarizes a \(z \times z\) neighborhood. If \(s = z\), it is traditional non-overlapping pooling; if \(s < z\), it is overlapping pooling. In the described network, the values used were \(s = 2\) and \(z = 3\).
+10. The answer isn't exist in the given pdf. =>
+11. Max-pooling layers follow the first and second response-normalization layers as well as the fifth convolutional layer.
+12. The answer isn't exist in the given pdf. The context only states that neurons in the fully connected layers are connected to all neurons in the previous layer; it does not give the number of neurons in each fully connected layer.
+13. The first form of data augmentation employed consists of generating image translations and horizontal reflections, by extracting random 224×224 patches and their horizontal reflections from the original images. The context does **not** state how it is used at test time; that part isn’t exist in the given pdf.
+14. The context provided does **not** describe PCA color augmentation. The answer isn’t exist in the given pdf.
+15. Dropout is applied in the **first two fully-connected layers**. The context indicates outputs are multiplied by **0.5** at test time, corresponding to a dropout probability of **0.5**.
+
+
+============================================================
+Hybrid RAG Response: Cultured Meat
+============================================================
+1. The answer isn't exist in the given pdf.  
+2. BuRO follows the four Codex Alimentarius risk assessment steps: **hazard identification, hazard characterisation, exposure assessment, and risk characterisation**.
+3. Singapore was the first country to formally authorise the consumption of in vitro cultured meat, in December 2020.
+4. The answer isn't exist in the given pdf. =>
+5. A maximum of **10 times per year per participant**.
+6. The expert committee must consist of at least a **toxicologist, a microbiologist, a physician, and an ethicist**.
+7. Under the CoP, Dutch tastings are limited to **30 participants per tasting**. Participation is voluntary and restricted to healthy adults without underlying conditions or allergies, after informed consent. Any adverse health effects are monitored for **up to two weeks after the tasting**.
+8. Common enteric bacteria such as Salmonella, E. coli, and Campylobacter could be less of a risk in cultured meat because conventional meat contamination occurs during slaughter, when contact with intestinal contents, faeces, or contaminated hides leads to bacterial contamination of the carcass. Since whole carcasses are not processed in cultured meat, this route of contamination is greatly reduced. However, contamination can still occur during collection of tissue used to initiate a cell culture.
+9. Visual detection is difficult because Mycoplasma contamination does not cause turbidity in the culture medium.
+10. Cultured meat is generally paler in colour than conventional meat because the oxygen conditions under which cells are grown suppress the expression of the muscle protein myoglobin. The context does not mention how this can be addressed, so the answer to “how can this be addressed?” isn't exist in the given pdf.
+11. The answer isn't exist in the given pdf.
+12. The primary risk is that using antimicrobial agents during the initial cultivation phase may contribute to the development of antimicrobial resistance, and microorganisms carrying drug resistance could be transmitted to consumers through cultured meat.
+13.Residues of animal-derived growth factors/hormones from the culture medium that remain in cultured meat are considered a potential concern because intake of excessive hormones via food can lead to hormonal imbalances and adverse health effects. The context also notes that exogenous hormones as growth promoters have been banned in EU livestock systems since 1981 due to potential human health risks.
+14. The answer isn't exist in the given pdf.
+15. No. The context states that cells in a cultured meat product are dead at the time of consumption and cannot proliferate in the consumer’s body, so “there is no risk of tumour development from eating cells that have undergone uncontrolled proliferation.” The context does not specifically address “immortalization.”

@@ -1,0 +1,59 @@
+[PDF Source]
+     │
+     ▼
+[PdfReader: Extract Full Text]
+     │
+     ▼ (full_text)
+[Hierarchical Chunking Engine]
+     │
+     ├─► [Parent Chunks (Large ~300 words)] ────────► In-Memory Dict: parent_docs {parent_id: text}
+     │         │
+     │         ▼ (Sub-divide each parent)
+     └─► [Child Chunks (Small ~70 words with overlap)]
+               │
+               ├─► documents (child text)
+               ├─► metadatas ({"parent_id": parent_id})
+               └─► ids (child_id)
+                       │
+                       ▼
+          [Nemotron Embeddings API (Batched)]
+                       │
+                       ▼ (child_embeddings)
+            [ChromaDB: child_embeddings] ────────────► Dense Vector Index (Only Child Chunks)
+
+──────────────────────────────────────────────────────────────────────────────────────────────────
+
+[User Query] ───────────────────────────┬───────────────────────────┐
+     │                                  │                           │
+     ▼                                  │                           ▼
+[Nemotron Embeddings API]               │                  [load_file_history()]
+     │                                  │                           │
+     ▼ (query_vec)                      │                           ▼
+[ChromaDB Vector Query (top 20)]        │                  Past File Conversations
+     │                                  │                           │
+     ▼ (Matched Child Metadatas)        │                           │
+[Extract Unique parent_ids (top 5)]     │                           │
+     │                                  │                           │
+     ▼ (parent_id lookup)               │                           │
+[parent_docs Dictionary Lookup]         │                           │
+     │                                  │                           │
+     ▼ (retrieved_parents text)         │                           │
+[Format full_context with "---"]        │                           │
+     │                                  │                           │
+     └─────────────────┬────────────────┘                           │
+                       ▼                                            │
+        [Construct Prompt (Context + Query)]                        │
+                       │                                            │
+                       └─────────────────────┬──────────────────────┘
+                                             ▼
+                                  [Build messages_to_send]
+                                             │
+                                             ▼
+                              [LLM: Nemotron-3.5-Super-VL]
+                                             │
+                                             ▼
+                                     [Model Response]
+                                             │
+                      ┌──────────────────────┴──────────────────────┐
+                      ▼                                             ▼
+       [persist_chat_history()]                      return (response, retrieved_parents)

@@ -1,0 +1,79 @@
+Nueral Network Q & A
+
+1. What error rates did the network achieve on the ImageNet LSVRC-2010 contest test data?
+Answer: It achieved a top-1 error rate of 37.5% and a top-5 error rate of 17.0%.   
+Page Number: Page 1   
+
+2. How many parameters and neurons does the network have?
+Answer: The neural network contains 60 million parameters and 650,000 neurons.   
+Page Number: Page 1   
+
+3. What was the winning top-5 test error rate achieved by a variant of this model in the ILSVRC-2012 competition?
+Answer: It achieved a top-5 test error rate of 15.3%, compared to 26.2% by the second-best entry.   
+Page Number: Page 1   
+
+4. How were the variable-resolution images in the ImageNet dataset pre-processed to have a fixed input size?
+Answer: Images were rescaled so that the shorter side was of length 256, and then the central $256 \times 256$ patch was cropped. The only other pre-processing was subtracting the mean activity over the training set from each pixel.   
+Page Number: Page 2   
+
+5. What hardware was used to train the network, and how long did the training take?
+Answer: It was trained on two NVIDIA GTX 580 3GB GPUs for five to six days.   
+Page Number: Page 2 and Page 7   
+
+6. Why did the authors choose Rectified Linear Units (ReLUs) over saturating nonlinearities like $f(x) = \tanh(x)$?
+Answer: Networks with ReLUs train several times faster with gradient descent than equivalent networks with saturating nonlinearities; on CIFAR-10, a network with ReLUs reached a 25% training error rate six times faster than with $\tanh$.   
+Page Number: Page 3   
+
+7. How do the two GPUs communicate across layers in the network?
+Answer: The network puts half of the kernels/neurons on each GPU, and the GPUs communicate only at specific layers. For example, layer 3 takes input from all kernel maps in layer 2, but layer 4 kernels take input only from layer 3 maps residing on the same GPU.   
+Page Number: Page 3   
+
+8. What are the specific hyperparameter values chosen for Local Response Normalization (LRN)?
+Answer: $k = 2$, $n = 5$, $\alpha = 10^{-4}$, and $\beta = 0.75$.   
+Page Number: Page 4   
+
+9. How is overlapping pooling defined, and what values of kernel size ($z$) and stride ($s$) were used?
+Answer: Overlapping pooling occurs when the stride $s$ is strictly less than the neighborhood size $z$ ($s < z$). The network used a stride of $s = 2$ and a pooling size of $z = 3$.   
+Page Number: Page 4   
+
+10. What are the kernel size, number of kernels, and stride of the first convolutional layer?
+Answer: It uses 96 kernels of size $11 \times 11 \times 3$ with a stride of 4 pixels.   
+Page Number: Page 4   
+
+11. Which convolutional layers are followed by max-pooling layers?
+Answer: Max-pooling layers follow the first, second, and fifth convolutional layers.   
+Page Number: Page 4   
+
+12. How many neurons are there in each of the fully connected layers?
+Answer: The first two fully-connected layers have 4096 neurons each, and the final layer has 1000 neurons (fed to a 1000-way softmax).   
+Page Number: Page 4 and Page 5   
+13. What is the first form of data augmentation employed, and how is it used at test time?Answer: Generating random $224 \times 224$ patches and their horizontal reflections from $256 \times 256$ images. At test time, the network extracts five $224 \times 224$ patches (four corners and center) plus their horizontal reflections (10 patches in total) and averages their softmax predictions.   
+Page Number: Page 5   
+
+14. How does the second form of data augmentation (PCA color augmentation) work?
+Answer: PCA is performed on the RGB pixel values of the training set. To each image, multiples of the principal components are added, with magnitudes proportional to the eigenvalues multiplied by a random variable drawn from a Gaussian distribution $\mathcal{N}(0, 0.1)$.   
+Page Number: Page 5–6   
+
+15. In which layers is dropout applied, and what is the dropout probability?
+Answer: It is applied to the first two fully-connected layers with a probability of 0.5 of setting hidden neuron outputs to zero.   
+Page Number: Page 6   
+
+16. What values were used for batch size, momentum, and weight decay during training?
+Answer:Batch size: 128 examples   Momentum: 0.9   Weight decay: 0.0005   
+Page Number: Page 6   
+
+17. How were the weights and neuron biases initialized across the layers?
+Answer:Weights were initialized from a zero-mean Gaussian distribution with a standard deviation of 0.01.   Biases in the 2nd, 4th, and 5th convolutional layers and fully-connected hidden layers were initialized to 1.   Biases in the remaining layers were initialized to 0.   
+Page Number: Page 6   
+
+18. What was the learning rate schedule used during training?
+Answer: The learning rate was initialized at 0.01 and divided by 10 whenever the validation error stopped improving (reduced 3 times prior to termination over roughly 90 cycles).   
+Page Number: Page 6–7   
+
+19. What specialization was observed between the kernels learned on GPU 1 versus GPU 2?
+Answer: Kernels on GPU 1 became largely color-agnostic (focusing on edges and frequency/orientation), whereas kernels on GPU 2 became largely color-specific (focusing on color blobs).   
+Page Number: Page 7   
+
+20. What effect did removing a single convolutional layer have on the network’s performance?
+Answer: Removing any single convolutional layer resulted in inferior performance, causing a loss of about 2% in top-1 accuracy for middle layers.   
+Page Number: Page 2 and Page 8   

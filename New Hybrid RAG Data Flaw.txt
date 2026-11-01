@@ -1,0 +1,47 @@
+[PDF Source]
+     │
+     ▼
+[extract_and_chunk_pdf()]
+     │
+     ├─► chunks (raw text) ───────┬─► [BM25Okapi] ───────────────► bm25 Index (Sparse)
+     │                            │
+     └─► metadatas (page numbers) │
+                                  ▼
+                     [OpenAI API: Nemotron Embeddings]
+                                  │
+                                  ▼ (Embeddings Vectors)
+                          [ChromaDB Client] ─────────────► Collection (Dense Index)
+
+────────────────────────────────────────────────────────────────────────────────────────
+
+[User Query] ──────────────────────────┬───────────────────────────┐
+     │                                 │                           │
+     ▼                                 ▼                           ▼
+[Nemotron Embeddings]          [bm25_tokenizer]            [load_file_history()]
+     │                                 │                           │
+     ▼ (query_vec)                     ▼                           ▼
+[ChromaDB Query]              [bm25.get_top_n()]            Past Conversations
+     │                                 │                           │
+     ▼ (top 10 dense chunks)           ▼ (top 10 sparse chunks)    │
+     └───────────────┬─────────────────┘                           │
+                     ▼                                             │
+      [Reciprocal Rank Fusion (RRF)]                               │
+                     │                                             │
+                     ▼ (top 5 hybrid chunks)                       │
+        [Metadata Page Formatting]                                 │
+                     │                                             │
+                     ▼ (Formatted Context)                         │
+                     ├─────────────────────────────────────────────┤
+                     ▼                                             ▼
+             [Context + Query]                             Messages Payload
+                     │                                             │
+                     └──────────────────────┬──────────────────────┘
+                                            ▼
+                             [LLM: Nemotron-3.5-Lightning]
+                                            │
+                                            ▼
+                                     [assistant_reply]
+                                            │
+                     ┌──────────────────────┴──────────────────────┐
+                     ▼                                             ▼
+      [persist_chat_history()]                      return (assistant_reply, context)

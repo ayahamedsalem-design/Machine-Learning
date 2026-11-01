@@ -1,0 +1,84 @@
+Cultured Meat Q & A
+
+1. Under which European Union regulation is cultured meat classified as a novel food?
+Answer: Cultured meat falls under the European Novel Food Regulation (EU) 2015/2283.   
+Page Number: Page 5 and Page 8 (Pagina 5 van 33, Pagina 8 van 33)   
+
+2. What four steps of risk assessment according to the Codex Alimentarius does BuRO follow?
+Answer: Hazard identification, hazard characterisation, exposure assessment, and risk characterisation.   
+Page Number: Page 1 (Pagina 1 van 33)   
+
+3. Which country was the first to formally authorise the consumption of in vitro cultured meat, and in which month and year?
+Answer: Singapore was the first country, granting approval in December 2020 for cultured chicken nuggets.   
+Page Number: Page 8 and Page 22 (Pagina 8 van 33, Pagina 22 van 33)   
+
+4. What are the three general steps in the production process of cultured meat?
+Answer:Obtaining the starting cells.   
+Biomass production through cell growth and differentiation.   
+Harvesting the cells and subsequent food processing.   
+Page Number: Page 2 and Page 10 (Pagina 2 van 33, Pagina 10 van 33)   
+
+5. According to the Dutch Code of Practice (CoP), what is the maximum number of times per year a participant is permitted to taste cultured meat?
+Answer: Participants are allowed to taste cultured meat a maximum of 10 times per year.   
+Page Number: Page 4 and Page 21 (Pagina 4 van 33, Pagina 21 van 33)   
+
+6. What professional disciplines must comprise the expert committee evaluating tasting applications under the Dutch CoP?
+Answer: The committee must consist of at least a toxicologist, a microbiologist, a physician, and an ethicist.   
+Page Number: Page 9 (Pagina 9 van 33)   
+
+7. What are the procedural participant limits and health monitoring requirements for Dutch tastings under the CoP?
+Answer: Participation is limited to a maximum of 30 pre-selected, healthy adult volunteers per tasting, and any adverse health effects must be monitored for up to two weeks following the event.   
+Page Number: Page 9 (Pagina 9 van 33)   
+
+8. Why could the common enteric bacteria (e.g., Salmonella, E. coli, and Campylobacter) be less of a risk in cultured meat compared to conventional meat?
+Answer: In conventional meat production, contamination primarily occurs during slaughter via contact with intestinal contents, faeces, or hides; because whole carcasses are not processed in cultured meat production, contamination through this route is greatly reduced.   
+Page Number: Page 12 (Pagina 12 van 33)   
+
+9. Why is visual detection of Mycoplasma contamination difficult in cell cultures?
+Answer: Mycoplasma contamination does not cause turbidity in the culture medium, making visual detection difficult.   
+Page Number: Page 16 (Pagina 16 van 33)   
+
+10. Why is cultured meat generally paler in colour than conventional meat, and how can this be addressed?
+Answer: The oxygen conditions under which cells are grown suppress the expression of myoglobin. 
+This can be addressed by culturing cells under hypoxic conditions, genetically engineering them to express myoglobin at higher oxygen levels, or adding heme proteins like soybean haemoglobin.   
+Page Number: Page 17 (Pagina 17 van 33)   
+
+11. What are microcarriers, and what role do they play in bioreactor cell cultivation?
+Answer: Microcarriers are small beads (approximately 100–400 µm in diameter) that mimic the extracellular matrix (ECM) stiffness, porosity, and surface characteristics, providing a surface for adherent cells to attach to while growing in suspension in bioreactors.   
+Page Number: Page 11 (Pagina 11 van 33)   
+
+12. What primary risk is associated with the potential use of antimicrobial agents during the initial cell isolation phase?
+Answer: Their use may contribute to the development of antimicrobial resistance, which could be transmitted to consumers or reduce the effectiveness of medical antibacterial treatments.   
+Page Number: Page 3, Page 13, and Page 14 (Pagina 3 van 33, Pagina 13 van 33, Pagina 14 van 33)   
+
+13. Why are residues of bovine growth factors or hormones (e.g., IGF-1) in cultured meat considered a potential health concern for humans?
+Answer: Some growth factors and hormones are structurally identical or highly conserved between humans and animals (e.g., bovine and human IGF-1), meaning they could interact with human receptors and induce undesirable biological effects or hormonal imbalances if they survive processing and digestion.   
+Page Number: Page 18 (Pagina 18 van 33)   
+
+14. What chemical hazards can arise from the use of plastic culture vessels and bioreactor containers?
+Answer: Heavy metals can leach from the bioreactor casing, microplastics can be shed from degrading plastic materials, and endocrine-disrupting chemicals like bisphenol A (BPA) and dibutyl phthalate (DBP) can migrate from culture plastics into cells.   
+Page Number: Page 3 and Page 19 (Pagina 3 van 33, Pagina 19 van 33)   
+
+15. Can consuming cells that have undergone uncontrolled proliferation or immortalization cause tumours in the consumer?
+Answer: No, because the cells are dead at the time of meat consumption and cannot proliferate in the human body.   
+Page Number: Page 15 (Pagina 15 van 33)   
+
+16. What are examples of chemical process contaminants that may form during the cooking or preparation of cultured meat?
+Answer: Acrylamide, polycyclic aromatic hydrocarbons (PAHs), furans, 3-MCPD esters (3-monochloropropanediol), and glycidyl fatty acid esters.   
+Page Number: Page 20 (Pagina 20 van 33)   
+
+17. How is regulatory oversight of cell-cultured livestock, poultry, and catfish divided between agencies in the United States?
+Answer: The FDA oversees the production process up to the point of cell harvest from the bioreactor (including cell collection, cell lines, and medium components), while the USDA-FSIS oversees cell harvesting, subsequent food processing, packaging, and labelling.   
+Page Number: Page 23 (Pagina 23 van 33)   
+
+18. How does the Singapore Food Agency (SFA) define a "history of safe use" for novel foods?
+Answer: A history of safe use means that the food has been consumed as part of the diet of a significant proportion of the population for at least 20 years without adverse health effects.   
+Page Number: Page 22 (Pagina 22 van 33)   
+
+19. Why was BuRO unable to conduct a full hazard characterisation and exposure assessment for Dutch tastings?
+Answer: There are no measurement data available on the actual presence or concentrations of microbiological agents or chemical substances in the cultured meat offered, and the tasting dossiers submitted by producers are confidential and inaccessible to BuRO.   
+Page Number: Page 3, Page 4, Page 20, and Page 21 (Pagina 3 van 33, Pagina 4 van 33, Pagina 20 van 33, Pagina 21 van 33)   
+
+20. What main advice did BuRO give to the Dutch Minister of Health, Welfare and Sport regarding cultured meat tastings?
+Answer: Provide the NVWA with access to the safety assessments carried out by the tasting committee, and establish a tasting assessment system that is transparent, reproducible, accessible to the supervisory authority, and embedded within established European and Dutch food safety systems.   
+Page Number: Page 6 (Pagina 6 van 33)   

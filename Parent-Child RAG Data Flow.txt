@@ -1,0 +1,62 @@
+[ Input PDF File ] 
+        │
+        ▼
+ ( 1. Text Extraction: PdfReader )
+        │
+        ▼
+   Raw Text String (full_text)
+        │
+        ▼
+ ( 2. Hierarchical / Parent-Child Chunking )
+        │
+        ├──► Store in Memory: parent_docs {parent_id: parent_text}  (Size: 1800 chars)
+        │
+        └──► Generate Child Chunks (Size: 400 chars, Overlap: 50 chars)
+             Child metadata: {"parent_id": parent_id}
+             Child IDs: "child_<uuid>"
+                    │
+                    ▼
+          ( Batch Embeddings via API )
+          nvidia/nemotron-3.5-embed-1b:free
+                    │
+                    ▼
+          [ ChromaDB Persistent Client ]
+           Collection: 'child_embeddings'
+           (Stores child vectors, texts, & metadata)
+===========================================================================
+                               RETRIEVAL PHASE
+===========================================================================
+                           [ User Query ]
+                                 │
+                                 ▼
+                     ( Embed Query via API )
+                nvidia/nemotron-3.5-embed-1b:free
+                                 │
+                                 ▼
+                        [ Query Vector ]
+                                 │
+                                 ▼
+                     [ ChromaDB Vector Search ]
+                     Top 5 Matching Child Chunks
+                                 │
+                                 ▼
+                   ( Extract Matched parent_id )
+                    Distinct Set of Parent IDs
+                                 │
+                                 ▼
+                ( Lookup in parent_docs Dictionary )
+                 Fetch Original 1800-char Parent Texts
+                                 │
+                                 ▼
+                 Combined Context (full_context)
+                                 │
+                                 ▼
+                  ( Prompt Formatting & Assembly )
+                     Context + Query Template
+                                 │
+                                 ▼
+               [ LLM: nvidia/nemotron-3.5-super-vl ]
+                     chat.completions.create
+                                 │
+                                 ▼
+                    [ Final Answer / Output ]

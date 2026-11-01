@@ -1,0 +1,73 @@
+============================================================
+Parent-Child RAG Response : Neural Network
+============================================================
+1. The network achieved top-1 and top-5 error rates of 37.5% and 17.0% on the ImageNet LSVRC-2010 contest test data.
+2. The network has 60 million parameters and 650,000 neurons.
+3. 15.3%
+4. The images were down-sampled to a fixed resolution of 256×256. For a rectangular image, they first rescaled it so that the shorter side was of length 256, and then cropped off the excess (the text is cut off at “cropped o”) to obtain the fixed input size.
+5. The network was trained on two NVIDIA GTX 580 3GB GPUs, and the training took between five and six days.
+6. The authors chose ReLUs because they are non-saturating nonlinearities that train several times faster than saturating nonlinearities like tanh. Specifically, a four-layer convolutional neural network with ReLUs reaches a 25% training error rate on CIFAR-10 six times faster than an equivalent network with tanh neurons.
+7. The two GPUs communicate only at certain layers. They are able to read from and write to one another’s memory directly, without going through host machine memory. For example, kernels in layer 3 take input from all kernel maps in layer 2 (across GPUs), while kernels in layer 4 take input only from kernel maps in layer 3 that reside on the same GPU.
+8. The specific hyperparameter values chosen for Local Response Normalization (LRN) are:
+k = 2
+n = 5
+α = 10⁻⁴
+β = 0.75
+9. Overlapping pooling is defined as a pooling layer consisting of a grid of pooling units spaced s pixels apart, each summarizing a neighborhood of size z×z centered at the pooling unit’s location; when s < z, adjacent pooling neighborhoods overlap (whereas s = z gives traditional non-overlapping local pooling). The network uses s = 2 and z = 3.
+10. The first convolutional layer filters the 224×224×3 input image with 96 kernels of size 11×11×3 with a stride of 4 pixels.
+11. The first, second, and fifth convolutional layers are followed by max-pooling layers. Specifically, response-normalization layers follow the first and second convolutional layers, and max-pooling layers follow both those response-normalization layers as well as the fifth convolutional layer.
+12. The fully-connected layers have 4096 neurons each.
+13. The first form of data augmentation consists of generating image translations and horizontal reflections by extracting random 224×224 patches (and their horizontal reflections). At test time, the context references the use of ten patches ("on the ten patches").
+14. The second form of data augmentation works by altering the intensities of the RGB channels in training images. Specifically, PCA is performed on the set of RGB pixel values throughout the ImageNet training set, and multiples of the found principal components are added to each training image.
+15. Dropout is applied in the first two fully-connected layers, with a dropout probability of 0.5 (the output of each hidden neuron is set to zero with probability 0.5).
+16. Batch size: 128
+Momentum: 0.9
+Weight decay: 0.0005
+17. Weights were initialized from a zero-mean Gaussian distribution with standard deviation 0.01. Neuron biases were initialized with the constant 1 in the second, fourth, and fifth convolutional layers as well as in the fully-connected hidden layers, and with the constant 0 in the remaining layers.
+18. The learning rate was initialized at 0.01 and adjusted manually throughout training. The heuristic followed was to divide the learning rate by 10 when the validation error rate stopped improving, and it was reduced three times prior to termination.
+19. The kernels on GPU 1 are largely color-agnostic, while the kernels on GPU 2 are largely color-specific.
+20. Removing a single convolutional layer caused the network’s performance to degrade. Specifically, removing any of the middle layers resulted in a loss of about 2% for the top-1 performance of the network.
+
+============================================================
+Parent-Child RAG Response : Cultured Meat 
+============================================================
+1. Regulation (EU) 2015/2283 (the Novel Food Regulation).
+2. The four steps of risk assessment according to the Codex Alimentarius that BuRO follows are:
+Hazard identification
+Hazard characterisation
+Exposure assessment
+Risk characterisation
+3. Singapore was the first country to formally authorise the consumption of in vitro cultured meat, in December 2020.
+4. 	Based on the context provided, the three general steps in the production process of cultured meat are:
+Collection of starter cells (obtained from biopsy tissue taken from an animal intended for food production)
+Biomass production through cell proliferation and differentiation
+Cell harvesting and subsequent food processing
+5. 10 times per year
+6. The expert committee must consist of at least a toxicologist, a microbiologist, a physician, and an ethicist.
+7. Under the CoP, the procedural participant limits and health monitoring requirements for Dutch tastings are:
+Participant Limits:
+Participation is strictly voluntary
+Limited to healthy adults without underlying conditions or allergies
+Only permitted after obtaining informed consent
+Maximum of 30 participants per tasting
+Tastings are not publicly accessible
+Participants are not reimbursed
+Health Monitoring Requirements:
+Any adverse health effects are monitored for up to two weeks after the tasting
+8. Because in conventional meat production, bacterial contamination commonly occurs during slaughter through contact with intestinal contents, faeces, or contaminated hides. Since whole carcasses are not processed in cultured meat production, the risk of contamination through this route is greatly reduced.
+9. Mycoplasma contamination does not cause turbidity in culture medium, making visual detection difficult.
+10. Cultured meat is generally paler because the oxygen conditions under which the cells are grown suppress the expression of myoglobin, the muscle protein that provides conventional meat its red colour through its iron‑binding capacity. To address this, the context states that cells could be cultured under [different oxygen conditions] to mimic the colour of conventional meat, though the specific conditions are cut off in the provided excerpt.
+11. Microcarriers are small beads used in bioreactors to enable cultured cells to grow in suspension. According to the provided context, because cells in bioreactors need to grow in suspension, bioreactors often employ these microcarriers to achieve that goal. (The text describes them as small beads of approximately 100, though the size unit is cut off in the excerpt.)
+12. The development of antimicrobial resistance.
+13. Because some growth factors and hormones are highly conserved between humans and animals—bovine and human IGF‑1, for example, are structurally identical—interactions could occur between animal‑derived molecules in the cultured meat product and human [systems/receptors]. Additionally, if such bioactive molecules are added through the culture medium and are not fully metabolized during cultivation, residues may remain in the final product and pose risks to consumers if concentrations exceed health‑based threshold values.
+14. Based on the provided context, the chemical hazards that can arise from the use of plastic culture vessels and bioreactor containers include:
+Leaching of (heavy) metals from the bioreactor casing
+Chemical contamination from materials that come into contact with the culture, such as the culture container and instruments used during culturing
+Heavy metals as possible hazards from contact materials
+The context also notes that a similar phenomenon has been observed for cells cultured in plastic materials for in vitro fertilization (Ishii et al., 2013).
+15. No. According to the context, there is no risk of tumour development from eating cells that have undergone uncontrolled proliferation because the cells are dead at the time of meat consumption.
+16. The answer isn't exist in the given pdf
+17. For foods derived from cultured animal cells of livestock, poultry, and catfish, the FDA and USDA-FSIS share oversight. The FDA oversees the production process (cell cultivation prior to harvest), and USDA-FSIS takes over oversight at the stage of cell harvest and for subsequent food processing steps after harvest, including packaging and labelling.
+18. A "history of safe use" means that the food has been consumed as part of the diet of a significant proportion of the population for at least 20 years without adverse health effects.
+19. BuRO was unable to conduct a full hazard characterisation and exposure assessment because it had no access to the confidential contents of the applications for the tastings (held in April and July 2024); the submitted dossiers were not publicly accessible and therefore not reviewed; information on portion sizes consumed during the tastings was missing; and no data were available on the actual presence of microbiological agents or chemical substances in the cultured meat offered for consumption at the Dutch tastings. Due to this limited availability of information, BuRO did not carry out further characterisation of the identified hazards or exposure assessment.
+20. The answer isn't exist in the given pdf 

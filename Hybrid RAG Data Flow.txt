@@ -1,0 +1,55 @@
+[ Input PDF File ] 
+        │
+        ▼
+ ( 1. Text Extraction: PdfReader )
+        │
+        ▼
+   Raw Text String
+        │
+        ▼
+ ( 2. Character-Based Chunking: 800 chars, 100 overlap )
+        │
+        ▼
+   List of Text Chunks
+        │
+        ├─────────────────────────────────────────────────┐
+        │ (Corpus Splitting & Lowercasing)                │ (Batching: 15 chunks/batch)
+        ▼                                                 ▼
+[ BM25Okapi Indexing ]                       [ OpenAI API: Embeddings ]
+ (In-Memory Sparse Index)                    (nvidia/nemotron-3.5-embed-1b)
+                                                          │
+                                                          ▼
+                                            [ ChromaDB Persistent Client ]
+                                             (Collection: 'hybrid_chunks')
+===========================================================================
+                               RETRIEVAL PHASE
+===========================================================================
+                           [ User Query ]
+                                 │
+        ┌────────────────────────┴────────────────────────┐
+        ▼                                                 ▼
+ ( Tokenize Query )                              ( Embed Query via API )
+        │                                                 │
+        ▼                                                 ▼
+[ BM25 Search ]                                 [ ChromaDB Query ]
+ (Top 5 Chunks)                                  (Top 5 Chunks)
+        │                                                 │
+        └────────────────────────┬────────────────────────┘
+                                 │
+                                 ▼
+                     ( Reciprocal Rank Fusion - RRF )
+                      Score = Σ 1 / (60 + rank + 1)
+                                 │
+                                 ▼
+                       Top 3 Hybrid Chunks
+                                 │
+                                 ▼
+                  ( Prompt Formatting & Assembly )
+                     Context + Query Template
+                                 │
+                                 ▼
+                  [ LLM: OpenRouter / auto ]
+                     chat.completions.create
+                                 │
+                                 ▼
+                    [ Final Answer / Output ]
