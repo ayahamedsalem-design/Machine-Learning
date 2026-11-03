@@ -9,6 +9,8 @@ from embedding_file_Basic_RAG import run_basic_RAG
 from embedding_file_Parent_Child_Chunking_RAG import run_parent_child_chunking_RAG
 from embedding_file_Hybrid_RAG import run_hybrid_chat_session
 from history_summarizer import summarize_cross_file_history
+from RAG.app_bridge import run_naive_rag, run_corrective_rag, load_db_history
+from RAG_service import execute_with_retry
 
 # Initializes logging (writes logging_config.json on first run)
 setup_logging()
@@ -28,7 +30,7 @@ logger.info("Starting the UI")
 
 st.title("Multi-Architecture RAG System")
 st.markdown(
-    "Query your PDF documents using **Basic**, **Hierarchical (Parent-Child)**, or **Hybrid** RAG retrieval methods."
+    "Query your PDF documents using **Basic**, **Hierarchical (Parent-Child)**, **Hybrid**, **Naive**, or **Corrective** RAG retrieval methods."
 )
 
 st.divider()
@@ -43,7 +45,7 @@ with st.sidebar:
 
     rag_type = st.radio(
         "Choose RAG Architecture:",
-        ("Basic RAG", "Hierarchical (Parent-Child) RAG", "Hybrid RAG"),
+        ("Basic RAG", "Hierarchical (Parent-Child) RAG", "Hybrid RAG", "Naive RAG", "Corrective RAG"),
         index=2,
     )
 
@@ -55,11 +57,20 @@ with st.sidebar:
         st.info(
             "Embeds small child chunks for precise retrieval and returns full parent context."
         )
-    else:
+    elif rag_type == "Hybrid RAG":
         st.info(
             "Combines dense semantic vector retrieval with sparse BM25 keyword matching via RRF."
         )
 
+    elif rag_type == "Naive RAG":
+        st.info(
+                    "Standard top-k vector similarity search without grading."
+                )
+    else:
+        st.info(
+                    "Retrieves candidates, grades relevance via LLM, and refetches missing parts if needed."
+                )
+        
     st.markdown("---")
     # A button to clear the conversation and start over
     if st.button("Clear Chat History", use_container_width=True):
@@ -109,7 +120,11 @@ if uploaded_file and uploaded_file.name != st.session_state.current_file:
 
 # View previous conversations loaded directly from JSON
 if uploaded_file:
-    file_history = load_file_history(uploaded_file.name)
+    if rag_type == "Naive RAG":
+          file_history = load_db_history(uploaded_file.name, system_name="naive")
+    elif rag_type == "Corrective RAG":
+          file_history = load_db_history(uploaded_file.name, system_name="crag")
+    else: file_history = load_file_history(uploaded_file.name)
     for message in file_history:
         with st.chat_message("user"):
             st.markdown(message["query"])
@@ -132,26 +147,46 @@ if user_query:
             st.markdown(user_query)
 
         # Processing & Output
-
         with st.chat_message("assistant"):
             with st.spinner(f"Running {rag_type}..."):
                 try:
                     # run the chosen RAG
                     if rag_type == "Basic RAG":
-                        answer, retrieved_contexts = run_basic_RAG(
-                            uploaded_file, user_query
+                        answer, retrieved_contexts = execute_with_retry(
+                            run_basic_RAG,
+                            uploaded_file, 
+                            user_query
                         )
                     elif rag_type == "Hierarchical (Parent-Child) RAG":
-                        answer, retrieved_contexts = run_parent_child_chunking_RAG(
-                            uploaded_file, user_query
+                        answer, retrieved_contexts =execute_with_retry(
+                            run_parent_child_chunking_RAG,
+                            uploaded_file, 
+                            user_query
+                        )
+                    elif rag_type == "Hybrid RAG":
+                        answer, retrieved_contexts = execute_with_retry(
+                            run_hybrid_chat_session,
+                            uploaded_file, 
+                            user_query
+                        )
+                    elif rag_type == "Naive RAG":
+                        answer, retrieved_contexts = execute_with_retry(
+                            run_naive_rag,
+                            uploaded_file.name,
+                            user_query
                         )
                     else:
-                        answer, retrieved_contexts = run_hybrid_chat_session(
-                            uploaded_file, user_query
+                        result = execute_with_retry(
+                            run_corrective_rag,
+                            uploaded_file.name,
+                            user_query
                         )
-
-                    logger.info("RAG execution completed successfully.")
-                    st.success("Execution completed successfully!")
+                        if len(result) == 3:
+                           answer, retrieved_contexts, crag_log = result
+                        else:
+                           answer, retrieved_contexts = result
+                           logger.info("RAG execution completed successfully.")
+                           st.success("Execution completed successfully!")
 
                     # Display the Model Response
                     st.subheader("Model Response")

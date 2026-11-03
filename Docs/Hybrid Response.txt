@@ -1,0 +1,60 @@
+
+ 
+============================================================
+Hybrid RAG Response: Neural Network
+============================================================
+1. The network achieved top-1 and top-5 error rates of **37.5%** and **17.0%** on the ImageNet LSVRC-2010 contest test data.  
+2. The network has **60 million parameters** and **650,000 neurons**.
+3. The winning top-5 test error rate was **15.3%**.
+4. The images were down-sampled to a fixed resolution of 256×256: each rectangular image was first rescaled so that its shorter side had length 256, and then a central 256×256 patch was cropped from the resulting image. The only other preprocessing mentioned was subtracting the mean activity over the training set from each pixel.  
+5. The answer isn't exist in the given pdf. ->
+6. The authors chose ReLUs because, in terms of training time with gradient descent, saturating nonlinearities such as tanh are much slower than the non-saturating ReLU \(f(x)=\max(0,x)\). They note that networks with ReLUs consistently learn several times faster than equivalent networks with saturating neurons—for example, six times faster than an equivalent network with tanh neurons.
+7. The answer isn't exist in the given pdf. -> The two GPUs communicate only at certain layers. The context also notes that cross-GPU parallelization allows them to read from and write to each other’s memory directly, without going through host machine memory.
+8. The specific hyperparameter values chosen for Local Response Normalization (LRN) are: **k = 2, n = 5, α = 10⁻⁴, and β = 0.75**.
+9. Overlapping pooling is defined as pooling where neighboring pooling units overlap: the pooling layer is a grid of units spaced \(s\) pixels apart, and each unit summarizes a \(z \times z\) neighborhood. If \(s = z\), it is traditional non-overlapping pooling; if \(s < z\), it is overlapping pooling. In the described network, the values used were \(s = 2\) and \(z = 3\).
+10. The answer isn't exist in the given pdf. => The first convolutional layer uses **96 kernels of size 11×11×3** with a **stride of 4 pixels**.
+11. Max-pooling layers follow the first and second response-normalization layers as well as the fifth convolutional layer.
+12. The context only states that neurons in the fully connected layers are connected to all neurons in the previous layer; it does not give the number of neurons in each fully connected layer. -> 4096 neuron final 1000 neuron => after improving The answer isn't exist in the given pdf
+13. The first form of data augmentation employed consists of generating image translations and horizontal reflections, by extracting random 224×224 patches and their horizontal reflections from the original images. The context does **not** state how it is used at test time; that part isn’t exist in the given pdf. -> The first form of data augmentation is generating image translations and horizontal reflections by extracting random 224×224 patches (and their horizontal reflections) from the 256×256 images and training the network on these extracted patches.
+At test time, the network extracts five 224×224 patches (the four corner patches and the center patch) plus their horizontal reflections—ten patches in all—and averages the predictions made by the network’s softmax layer on the ten patches.
+14. The context provided does **not** describe PCA color augmentation. The answer isn’t exist in the given pdf. -> The second form of data augmentation alters the intensities of the RGB channels in training images. Specifically, it performs PCA on the set of RGB pixel values throughout the ImageNet training set, and to each training image it adds multiples of the found principal components.
+15. Dropout is applied in the **first two fully-connected layers**. The context indicates outputs are multiplied by **0.5** at test time, corresponding to a dropout probability of **0.5**.
+16. The models were trained with a batch size of 128, momentum of 0.9, and weight decay of 0.0005.
+17. Weights in every layer were initialized from a zero-mean Gaussian distribution with standard deviation 0.01. Biases in the second, fourth, and fifth convolutional layers and the fully connected hidden layers were initialized to 1; biases in the remaining layers were initialized to 0.
+18. The learning rate started at 0.01 and was divided by 10 whenever the validation error rate stopped improving.
+19. GPU 1 kernels were largely color-agnostic, while GPU 2 kernels were largely color-specific.
+20. Removing any middle convolutional layer reduced the network’s top-1 performance by about 2%.
+
+============================================================
+Hybrid RAG Response: Cultured Meat
+============================================================
+1. The answer isn't exist in the given pdf.-> Cultured meat is classified as a novel food under the **European Novel Food Regulation (EU) 2015/2283**.
+2. BuRO follows the four Codex Alimentarius risk assessment steps: **hazard identification, hazard characterisation, exposure assessment, and risk characterisation**.
+3. Singapore was the first country to formally authorise the consumption of in vitro cultured meat, in December 2020.
+4. The answer isn't exist in the given pdf.=> The three general steps are:
+Obtaining the starting cells  
+Biomass production through cell growth and differentiation  
+Harvesting the cells and subsequent food processing
+5. A maximum of **10 times per year per participant**.
+6. The expert committee must consist of at least a **toxicologist, a microbiologist, a physician, and an ethicist**.
+7. Under the CoP, Dutch tastings are limited to **30 participants per tasting**. Participation is voluntary and restricted to healthy adults without underlying conditions or allergies, after informed consent. Any adverse health effects are monitored for **up to two weeks after the tasting**.
+8. Common enteric bacteria such as Salmonella, E. coli, and Campylobacter could be less of a risk in cultured meat because conventional meat contamination occurs during slaughter, when contact with intestinal contents, faeces, or contaminated hides leads to bacterial contamination of the carcass. Since whole carcasses are not processed in cultured meat, this route of contamination is greatly reduced. However, contamination can still occur during collection of tissue used to initiate a cell culture.
+9. Visual detection is difficult because Mycoplasma contamination does not cause turbidity in the culture medium.
+10. Cultured meat is generally paler in colour than conventional meat because the oxygen conditions under which cells are grown suppress the expression of the muscle protein myoglobin. The context does not mention how this can be addressed, so the answer to “how can this be addressed?” isn't exist in the given pdf.
+11. The answer isn't exist in the given pdf. -> 
+12. The primary risk is that using antimicrobial agents during the initial cultivation phase may contribute to the development of antimicrobial resistance, and microorganisms carrying drug resistance could be transmitted to consumers through cultured meat.
+13. Residues of animal-derived growth factors/hormones from the culture medium that remain in cultured meat are considered a potential concern because intake of excessive hormones via food can lead to hormonal imbalances and adverse health effects. The context also notes that exogenous hormones as growth promoters have been banned in EU livestock systems since 1981 due to potential human health risks.
+14. The answer isn't exist in the given pdf. -> Based on the context, chemical hazards from plastic culture vessels and bioreactor containers include:
+- **Leaching of heavy metals** from bioreactor casing or instruments.
+- **Microplastics** released from plastic culture products such as flasks or dishes; their toxicity in food is currently unknown, but they could interact with and alter other food components.
+- **Endocrine-disrupting chemicals**, such as **bisphenol A (BPA)** and **dibutyl phthalate (DBP)**, from plastics used for cell culture, which could potentially accumulate in in vitro cultured cells.
+15. No. The context states that cells in a cultured meat product are dead at the time of consumption and cannot proliferate in the consumer’s body, so “there is no risk of tumour development from eating cells that have undergone uncontrolled proliferation.” The context does not specifically address “immortalization.”
+16. Examples of chemical process contaminants that may form during food processing and preparation include acrylamide, polycyclic aromatic hydrocarbons (PAHs), furans, 3-MCPD esters (3-monochloropropanediol), and glycidyl fatty acid esters. The context notes that it is currently unknown whether and to what extent their formation during cultured meat processing and preparation differs from conventional meat.
+17. For foods derived from cultured animal cells of livestock, poultry, and catfish, the FDA and USDA-FSIS **share oversight**. The context also states that the FDA oversees the production proce[ss]—but the passage is truncated, so the full division of responsibilities is not available. ->For cell-cultured livestock, poultry, and catfish, the FDA and USDA-FSIS share regulatory oversight:
+- **FDA** oversees the production process **up to the point cells are harvested from the bioreactor**, including tissue collection, cell isolation, cell line development and storage in cell banks, and ingredients/components used in the culture process. FDA also conducts a **consultation** evaluating the culture process for food safety of the final product; this is **not an approval procedure**.
+- **USDA-FSIS** takes over oversight **at the stage of cell harvest and for subsequent food processing steps after harvest**.
+18. The answer isn't exist in the given pdf. -> The Singapore Food Agency (SFA) defines a “history of safe use” as meaning that the food has been consumed as part of the diet of a significant proportion of the population for at least 20 years without adverse health effects.
+19. The answer isn't exist in the given pdf. -> BuRO was unable to conduct a full hazard characterisation and exposure assessment because there was a lack of data on the actual presence of pathogenic micro-organisms and levels of chemical substances in cultured meat; additionally, portion sizes for Dutch tastings were unknown.
+20. The answer isn't exist in the given pdf. -> BuRO advised the Dutch Minister of Health, Welfare and Sport to:
+ **Provide the NVWA with access to the safety assessments** of cultured meat tastings carried out by the committee established specifically for that purpose.
+ **Ensure food safety is safeguarded during tastings of novel foods** by establishing an assessment system that includes the requirements for submitting an application to organize tastings, the accompanying safety dossier, and the authority that evaluates it.

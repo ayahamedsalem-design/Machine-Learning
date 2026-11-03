@@ -12,7 +12,7 @@ from chat_history import persist_chat_history, load_file_history
 # Embedding
 # 1.1 Initialization and Environment Setup
 load_dotenv()
-api_key = os.getenv("Embedded_Model_Key")
+api_key = os.getenv("OPENROUTER_API_KEY")
 
 client_ai = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key, timeout=30)
 
@@ -34,9 +34,10 @@ def run_parent_child_chunking_RAG(pdf_source, user_query):
     child_overlap = 15  # ~80 characters
 
     parent_docs = {}
+    child_ids = []
     child_chunks = []
     child_metadatas = []
-    child_ids = []
+    child_embeddings = []
 
     # Generate Parent Chunks
     for p_idx in range(0, len(full_text), parent_chunk_words):
@@ -62,7 +63,6 @@ def run_parent_child_chunking_RAG(pdf_source, user_query):
         len(child_chunks) / 15
     )  # limit the model calls to 15 to get around the free-tier limitation (20 call/min)
     print(batch_size)
-    child_embeddings = []
 
     print("Generating embeddings for child chunks...")
 

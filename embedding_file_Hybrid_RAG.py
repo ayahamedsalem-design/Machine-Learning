@@ -12,7 +12,7 @@ from chat_history import persist_chat_history, load_file_history
 # Embedding
 # 1.1 Initialization and Environment Setup
 load_dotenv()
-api_key = os.getenv("Embedded_Model_Key")
+api_key = os.getenv("OPENROUTER_API_KEY")
 
 client_ai = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key, timeout=30)
 
