@@ -1,14 +1,16 @@
+import user_table
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from postgresdb import engine, get_db
-import user_table
+from dbs.postgresdb import engine, get_db
+from pydantic import BaseModel
+
 
 # Automatically create tables in the database if they do not exist
 user_table.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-from pydantic import BaseModel
+
 
 # The data model coming from the request
 class UserCreate(BaseModel):
@@ -39,3 +41,5 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
         "username": new_user.username,
         "email": new_user.email
     }}
+
+

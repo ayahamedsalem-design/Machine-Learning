@@ -12,10 +12,10 @@ RUN pip install uv
 # and application source code into the container.
 COPY . .
 
-RUN uv pip install --system -e .
+RUN uv pip install --system fastapi uvicorn sqlalchemy psycopg2-binary redis pydantic
 
 # Expose the API port
 EXPOSE 8000
 
 # Start the application. 
-CMD ["uvicorn", "APIs.API:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "redisAPIdb:app", "--host", "0.0.0.0", "--port", "8000"]
