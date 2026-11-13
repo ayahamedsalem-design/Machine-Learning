@@ -23,12 +23,13 @@ api_key = os.getenv("OPENROUTER_API_KEY")
 chat_model = os.getenv("CHAT_MODEL")
 
 if not api_key:
-    logger.warning("OPENROUTER_API_KEY is missing from environment variables!")
+    logger.warning("OPENROUTER_API_KEY is missing from environment variables! API calls will fail!")
 
 if not chat_model:
-    logger.warning("CHAT_MODEL is not set in environment variables! Model requests might fail.")
+    logger.warning("CHAT_MODEL is not set in environment variables! Using fallback or requests might fail.")
 
 # Creating Openrouter 
+logger.debug("Initializing OpenRouter OpenAI client.")
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
     api_key= api_key, 
@@ -47,8 +48,8 @@ class QARecord(Base):
     )
 
 def chat_with_ai(user_message: str):
-  logger.info("Sending prompt to OpenRouter model: %s", chat_model)
-  logger.debug("Prompt content: %s", user_message)
+  logger.info("Sending prompt to OpenRouter model: ", {chat_model})
+  logger.debug("Prompt content: ", {user_message})
   try:
         completion = client.chat.completions.create(
             model=chat_model,
@@ -58,9 +59,9 @@ def chat_with_ai(user_message: str):
             ]
         )
         reply = completion.choices[0].message.content
-        logger.info("Successfully received response from OpenRouter.")
+        logger.info("Successfully received and parsed response from AI model.")
         return {"response": reply}
 
   except Exception as e:
-        logger.error("Failed to fetch response from OpenRouter: %s", str(e), exc_info=True)
+        logger.error("Failed to fetch response from OpenRouter: ", {str(e)}, exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))

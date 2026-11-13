@@ -34,13 +34,33 @@ ENV PATH="/opt/venv/bin:$PATH"
 # Create a non-root user for security purposes
 RUN useradd -m -u 1000 appuser
 
+# WORKDIR /app
+
+# # Copy the virtual environment from the builder stage
+# COPY --from=builder /opt/venv /opt/venv
+
+# # Copy application code and change ownership to the non-root user
+# COPY --chown=appuser:appuser . .
+
+# # Create logs directory and give ownership to appuser BEFORE switching user
+# RUN mkdir -p logs && chown -R appuser:appuser logs
+
+# # Switch to the non-root user
+# USER appuser
+
+# EXPOSE 8000
+
+# CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 WORKDIR /app
 
 # Copy the virtual environment from the builder stage
 COPY --from=builder /opt/venv /opt/venv
 
-# Copy application code and change ownership to the non-root user
-COPY --chown=appuser:appuser . .
+# Copy application code
+COPY . .
+
+# Force full ownership of the entire /app directory and its contents to appuser
+RUN chown -R appuser:appuser /app
 
 # Switch to the non-root user
 USER appuser
