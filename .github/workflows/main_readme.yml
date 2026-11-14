@@ -1,0 +1,81 @@
+name: Update README with Branches
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  create:
+
+permissions:
+  contents: write
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Generate README
+        run: |
+          # Extract remote branches and save to a temporary file
+          git branch -r | sed 's/origin\///' | grep -v 'HEAD' | sed -e 's/^[[:space:]]*//' > all_branches.txt
+
+          REPO_URL="https://github.com/${{ github.repository }}"
+
+          # Write the README header
+          cat << 'EOF' > README.md
+          # Sessions & Assignments Index
+
+          Index of all available sessions and practical assignments in this repository:
+
+          | Session | Lecture Branch | Assignment Branch |
+          | :--- | :--- | :--- |
+          EOF
+
+          # Extract unique session numbers and sort them numerically
+          SESSIONS=$(grep -E '^session-[0-9]+|^session[0-9]+' all_branches.txt | sed -E 's/session-?([0-9]+).*/\1/' | sort -n -u)
+
+          for s in $SESSIONS; do
+            # Find the main session branch (e.g., session-1 or session1)
+            MAIN_B=$(grep -E "^session-?${s}$" all_branches.txt | head -n 1 || true)
+            # Find the assignment branch (e.g., session-1-assignment, session1-assignment, or session1_assignment)
+            ASSIGN_B=$(grep -E "^session-?${s}[-_]assignment$" all_branches.txt | head -n 1 || true)
+
+            # Prepare the lecture link
+            if [ -n "$MAIN_B" ]; then
+              LECTURE_LINK="[💻 $MAIN_B]($REPO_URL/tree/$MAIN_B)"
+            else
+              LECTURE_LINK="—"
+            fi
+
+            # Prepare the assignment link
+            if [ -n "$ASSIGN_B" ]; then
+              ASSIGN_LINK="[📝 $ASSIGN_B]($REPO_URL/tree/$ASSIGN_B)"
+            else
+              ASSIGN_LINK="—"
+            fi
+
+            # Append the row to the README
+            echo "| **Session $s** | $LECTURE_LINK | $ASSIGN_LINK |" >> README.md
+          done
+
+          # Clean up the temporary file
+          rm all_branches.txt
+
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add README.md
+          if git diff --staged --quiet; then
+            echo "No changes in branches detected."
+          else
+            git commit -m "docs: auto-update branches index in README"
+            git push origin main
+          fi
