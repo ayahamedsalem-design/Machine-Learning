@@ -19,7 +19,7 @@
         },
         "file_rotating": {
             "class": "logging.handlers.RotatingFileHandler",
-            "level": "DEBUG",
+            "level": "INFO",
             "formatter": "standard",
             "filename": "logs\\app.log",
             "maxBytes": 5242880,

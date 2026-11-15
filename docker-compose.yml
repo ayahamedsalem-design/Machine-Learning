@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  rag-web:
+    build: .
+    container_name: global_rag_app
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    environment:
+      # السماح لـ Container بالتواصل مع Ollama الموجود على الجهاز المضيف (الويندوز)
+      - OLLAMA_HOST=http://host.docker.internal:11434
+    volumes:
+      # حفظ قاعدة بيانات ChromaDB الشاملة وملف المحادثات لتفادي فقدانها عند إيقاف الحاوية
+      - ./chroma_db_global:/app/chroma_db_global
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

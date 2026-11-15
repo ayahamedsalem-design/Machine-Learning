@@ -32,7 +32,7 @@ DEFAULT_LOGGING_CONFIG = {
             "class": "logging.handlers.RotatingFileHandler",
             "level": "INFO",
             "formatter": "standard",
-            "filename": str(LOG_DIR / "app.log"),
+            "filename": (LOG_DIR / "app.log").as_posix(),
             "maxBytes": 5242880,  # 5 MB
             "backupCount": 5,
             "encoding": "utf-8",
@@ -41,7 +41,7 @@ DEFAULT_LOGGING_CONFIG = {
             "class": "logging.handlers.RotatingFileHandler",
             "level": "ERROR",
             "formatter": "standard",
-            "filename": str(LOG_DIR / "errors.log"),
+            "filename": (LOG_DIR / "errors.log").as_posix(),
             "maxBytes": 5242880,  # 5 MB
             "backupCount": 3,
             "encoding": "utf-8",

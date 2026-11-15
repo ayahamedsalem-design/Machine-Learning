@@ -1,221 +1,198 @@
+import os
 import logging
-from logger_config import setup_logging
 import streamlit as st
 from dotenv import load_dotenv
-from chat_history import load_file_history, clear_all_history, load_all_history
 
-# Import the modular RAG functions from your local files
-from embedding_file_Basic_RAG import run_basic_RAG
-from embedding_file_Parent_Child_Chunking_RAG import run_parent_child_chunking_RAG
-from embedding_file_Hybrid_RAG import run_hybrid_chat_session
-from history_summarizer import summarize_cross_file_history
+# Global RAG imports from RAGs package
+from RAGs.logger_config import setup_logging
+from RAGs.basic_RAG import run_basic_RAG, index_basic_rag
+from RAGs.parent_child_RAG import (
+    run_parent_child_chunking_RAG,
+    index_parent_child_rag,
+)
+from RAGs.hybrid_RAG import run_hybrid_chat_session, initialize_hybrid_index
+from RAGs.corrective_parent_child_RAG import run_corrective_parent_child_rag
+from RAGs.corrective_hybrid_RAG import run_corrective_hybrid_rag
+from RAGs.history_summarizer import summarize_cross_file_history
+from RAGs.RAG_service import execute_with_retry
+from RAGs.chat_history import load_file_history, clear_all_history, load_all_history
+
+# Legacy RAG imports from RAG package
 from RAG.app_bridge import run_naive_rag, run_corrective_rag, load_db_history
-from RAG_service import execute_with_retry
 
 # Initializes logging (writes logging_config.json on first run)
 setup_logging()
-
 logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
 
-# Streamlit Page Setup
-st.set_page_config(page_title="Universal RAG System", page_icon="🤖", layout="wide")
-
-logger.debug(
-    "Streamlit script execution triggered. Initializing environment variables and state."
-)
-logger.info("Starting the UI")
-
-st.title("Multi-Architecture RAG System")
+st.set_page_config(page_title="Global Knowledge Base RAG", page_icon="🤖", layout="wide")
+st.title("Enterprise Global RAG System ")
 st.markdown(
-    "Query your PDF documents using **Basic**, **Hierarchical (Parent-Child)**, **Hybrid**, **Naive**, or **Corrective** RAG retrieval methods."
+    "Query across **ALL** your indexed documents using Global architectures or External RAG pipelines."
 )
-
 st.divider()
 
-if "current_file" not in st.session_state:
-    st.session_state.current_file = None
-    logger.debug("Session state 'current_file' initialized to None.")
+# Unified session ID for global cross-document chat history
+GLOBAL_SESSION_ID = "global_chat_session"
 
-# Left Sidebar: Architecture Selection
+# ==========================================
+# 1. Sidebar: Knowledge Base Ingestion & Settings
+# ==========================================
 with st.sidebar:
-    st.header("RAG Systems")
+    st.header("1. Feed the Knowledge Base")
+    st.info("Upload PDF documents here to index them permanently into the Global Database.")
 
+    uploaded_file = st.file_uploader("Upload PDF to Global DB:", type=["pdf"], key="global_uploader")
+
+    if uploaded_file:
+        if st.button("Index File into Global DB", use_container_width=True):
+            with st.spinner(f"Indexing '{uploaded_file.name}' across Basic, Hierarchical, and Hybrid DBs..."):
+                try:
+                    # Index into all Global RAG architectures simultaneously
+                    index_basic_rag(uploaded_file)
+                    index_parent_child_rag(uploaded_file)
+                    initialize_hybrid_index(uploaded_file)
+
+                    logger.info(f"Successfully indexed '{uploaded_file.name}' into all Global DBs.")
+                    st.success(f"'{uploaded_file.name}' added to the Global Database!")
+                except Exception as e:
+                    logger.error(f"Indexing failed for '{uploaded_file.name}': {e}", exc_info=True)
+                    st.error(f"Error during indexing: {e}")
+
+    st.divider()
+    st.header("2. Query Architecture")
     rag_type = st.radio(
         "Choose RAG Architecture:",
-        ("Basic RAG", "Hierarchical (Parent-Child) RAG", "Hybrid RAG", "Naive RAG", "Corrective RAG"),
-        index=2,
+        (
+            "Basic RAG",
+            "Parent-Child (Hierarchical) RAG",
+            "Hybrid RAG",
+            "Corrective Parent-Child RAG",
+            "Corrective Hybrid RAG",
+            "Ext Naive RAG",
+            "Ext Corrective RAG"
+         ),
+        index=0,
     )
 
     st.markdown("---")
-    st.markdown("**Architecture Details:**")
-    if rag_type == "Basic RAG":
-        st.info("Standard vector similarity search with fixed-size chunks.")
-    elif rag_type == "Hierarchical (Parent-Child) RAG":
-        st.info(
-            "Embeds small child chunks for precise retrieval and returns full parent context."
-        )
-    elif rag_type == "Hybrid RAG":
-        st.info(
-            "Combines dense semantic vector retrieval with sparse BM25 keyword matching via RRF."
-        )
-
-    elif rag_type == "Naive RAG":
-        st.info(
-                    "Standard top-k vector similarity search without grading."
-                )
-    else:
-        st.info(
-                    "Retrieves candidates, grades relevance via LLM, and refetches missing parts if needed."
-                )
-        
-    st.markdown("---")
-    # A button to clear the conversation and start over
     if st.button("Clear Chat History", use_container_width=True):
         clear_all_history()
-        logger.info("Chat history cleared")
-        st.success("All cross-file history cleared!")
+        logger.info("Global chat history cleared.")
+        st.success("All history cleared!")
         st.rerun()
 
-    # Placeholder for summarization
     if st.button("Summarize History", use_container_width=True):
-        logger.info("Summarization process triggered using Hybrid RAG model")
         all_history = load_all_history()
-
         if not all_history:
-            logger.warning(
-                "Summarization requested, but no cross-file history was found."
-            )
             st.warning("No history available to summarize.")
         else:
-            with st.spinner("Summarizing across all files using Nemotron..."):
-                # Concatenate all Q&A across the multiple documents
+            with st.spinner("Summarizing conversation history..."):
                 history_text = "\n".join(
-                    [
-                        f"File: {item.get('file_name', 'Unknown')} | Q: {item.get('query')} | A: {item.get('answer')}"
-                        for item in all_history
-                    ]
+                    [f"Q: {item.get('query')} | A: {item.get('answer')}" for item in all_history]
                 )
-
                 try:
                     summary = summarize_cross_file_history(history_text)
-                    logger.info("History summarization completed successfully.")
                     st.markdown("**📝 Global History Summary**")
                     st.info(summary)
                 except Exception as e:
-                    logger.error(
-                        f"Failed to generate history summary: {e}", exc_info=True
-                    )
+                    logger.error(f"Summary generation failed: {e}", exc_info=True)
                     st.error(f"Failed to generate summary: {e}")
 
-# File Upload & Query Form
-uploaded_file = st.file_uploader("Upload your PDF:", type=["pdf"])
 
-# Reset History if a different file was uploaded
-if uploaded_file and uploaded_file.name != st.session_state.current_file:
-    logger.debug(f"New file uploaded: {uploaded_file.name}. Updating session state.")
-    st.session_state.current_file = uploaded_file.name
+# ==========================================
+# 2. Main Area: Chat Interface
+# ==========================================
+# Identify if the selected architecture is an external one
+is_ext_mode = "Ext" in rag_type
 
-# View previous conversations loaded directly from JSON
-if uploaded_file:
-    if rag_type == "Naive RAG":
-          file_history = load_db_history(uploaded_file.name, system_name="naive")
-    elif rag_type == "Corrective RAG":
-          file_history = load_db_history(uploaded_file.name, system_name="crag")
-    else: file_history = load_file_history(uploaded_file.name)
-    for message in file_history:
-        with st.chat_message("user"):
-            st.markdown(message["query"])
-        with st.chat_message("assistant"):
-            st.markdown(message["answer"])
-            if "rag_context" in message and message["rag_context"]:
-                with st.expander("View Retrieved Context Chunks"):
-                    st.text(message["rag_context"])
+# Load appropriate conversation history based on Global vs Ext mode
+if is_ext_mode:
+    system_key = "naive" if "Naive" in rag_type else "crag"
+    # Assuming GLOBAL_SESSION_ID is used as the session name for external RAGs as well
+    active_history = load_db_history(GLOBAL_SESSION_ID, system_name=system_key)
+else:
+    active_history = load_file_history(GLOBAL_SESSION_ID)
 
-# Receive new questions via chat_input
-user_query = st.chat_input("Ask a question about the document...")
+# Render chat history
+for message in active_history:
+    with st.chat_message("user"):
+        st.markdown(message["query"])
+    with st.chat_message("assistant"):
+        st.markdown(message["answer"])
+        if "rag_context" in message and message["rag_context"]:
+            with st.expander("View Retrieved Context Chunks"):
+                st.text(message["rag_context"])
+
+# Handle new user input
+user_query = st.chat_input("Ask any question...")
 
 if user_query:
-    if not uploaded_file:
-        logger.warning("User submitted a query without uploading a PDF document first.")
-        st.warning("Please upload a PDF file first.")
-    else:
-        logger.info(f"Processing user query via {rag_type}")
-        with st.chat_message("user"):
-            st.markdown(user_query)
+    logger.info(f"Processing query via {rag_type}")
+    with st.chat_message("user"):
+        st.markdown(user_query)
 
-        # Processing & Output
-        with st.chat_message("assistant"):
-            with st.spinner(f"Running {rag_type}..."):
-                try:
-                    # run the chosen RAG
-                    if rag_type == "Basic RAG":
-                        answer, retrieved_contexts = execute_with_retry(
-                            run_basic_RAG,
-                            uploaded_file, 
-                            user_query
-                        )
-                    elif rag_type == "Hierarchical (Parent-Child) RAG":
-                        answer, retrieved_contexts =execute_with_retry(
-                            run_parent_child_chunking_RAG,
-                            uploaded_file, 
-                            user_query
-                        )
-                    elif rag_type == "Hybrid RAG":
-                        answer, retrieved_contexts = execute_with_retry(
-                            run_hybrid_chat_session,
-                            uploaded_file, 
-                            user_query
-                        )
-                    elif rag_type == "Naive RAG":
-                        answer, retrieved_contexts = execute_with_retry(
-                            run_naive_rag,
-                            uploaded_file.name,
-                            user_query
-                        )
-                    else:
-                        result = execute_with_retry(
-                            run_corrective_rag,
-                            uploaded_file.name,
-                            user_query
-                        )
-                        if len(result) == 3:
-                           answer, retrieved_contexts, crag_log = result
-                        else:
-                           answer, retrieved_contexts = result
-                           logger.info("RAG execution completed successfully.")
-                           st.success("Execution completed successfully!")
-
-                    # Display the Model Response
-                    st.subheader("Model Response")
-                    st.write(answer)
-
-                    # Collapsible view for the retrieved context chunks
-                    with st.expander("View Retrieved Context Chunks"):
-                        if isinstance(retrieved_contexts, list):
-                            for idx, chunk in enumerate(retrieved_contexts):
-                                st.markdown(f"**Chunk [{idx + 1}]**")
-
-                                # Extracting text, whether it's dict or str
-                                if isinstance(chunk, dict):
-                                    # If it is a dictionary, we look for the key that contains the text
-                                    text_content = (
-                                        chunk.get("text")
-                                        or chunk.get("page_content")
-                                        or str(chunk)
-                                    )
-                                else:
-                                    text_content = str(chunk)
-
-                                st.text(text_content.strip())
-                                st.markdown("---")
-                        else:
-                            st.text(str(retrieved_contexts))
-
-                except Exception as e:
-                    logger.critical(
-                        f"Fatal error during {rag_type} execution: {e}", exc_info=True
+    with st.chat_message("assistant"):
+        with st.spinner(f"Running {rag_type}..."):
+            try:
+                # Route to Global Multi-Document Architectures
+                if rag_type == "Basic RAG":
+                    answer, retrieved_contexts = execute_with_retry(
+                        run_basic_RAG, user_query
                     )
-                    st.error(f"An error occurred during execution: {e}")
+                elif rag_type == "Parent-Child (Hierarchical) RAG":
+                    answer, retrieved_contexts = execute_with_retry(
+                        run_parent_child_chunking_RAG, user_query
+                    )
+                elif rag_type == "Hybrid RAG":
+                    answer, retrieved_contexts = execute_with_retry(
+                        run_hybrid_chat_session, user_query
+                    )
+                elif rag_type == "Corrective Parent-Child RAG":
+                    answer, retrieved_contexts = execute_with_retry(
+                        run_corrective_parent_child_rag, user_query
+                    )
+                elif rag_type == "Corrective Hybrid RAG":
+                    answer, retrieved_contexts = execute_with_retry(
+                        run_corrective_hybrid_rag, user_query
+                    )
+
+                # Route to External Architectures (Session Name + Query)
+                elif rag_type == "Ext Naive RAG":
+                    answer, retrieved_contexts = execute_with_retry(
+                        run_naive_rag, GLOBAL_SESSION_ID, user_query
+                    )
+                elif rag_type == "Ext Corrective RAG":
+                    result = execute_with_retry(
+                        run_corrective_rag, GLOBAL_SESSION_ID, user_query
+                    )
+                    if len(result) == 3:
+                        answer, retrieved_contexts, crag_log = result
+                    else:
+                        answer, retrieved_contexts = result
+
+                st.subheader("Model Response")
+                st.write(answer)
+
+                with st.expander("View Retrieved Context Chunks"):
+                    if isinstance(retrieved_contexts, list):
+                        for idx, chunk in enumerate(retrieved_contexts):
+                            st.markdown(f"**Chunk [{idx + 1}]**")
+                            if isinstance(chunk, dict):
+                                text_content = (
+                                    chunk.get("text")
+                                    or chunk.get("page_content")
+                                    or str(chunk)
+                                )
+                            else:
+                                text_content = str(chunk)
+                            st.text(text_content.strip())
+                            st.markdown("---")
+                    else:
+                        st.text(str(retrieved_contexts))
+
+            except Exception as e:
+                logger.critical(f"Fatal error during {rag_type} execution: {e}", exc_info=True)
+                st.error(f"An error occurred during execution: {e}")

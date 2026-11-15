@@ -5,7 +5,7 @@ import RAG.ask_crag
 import RAG.memory as memory
 import RAG.memory as memory
 
-from logger_config import setup_logging
+from RAGs.logger_config import setup_logging
 from RAG.rag_common import open_db, TOP_K, MAX_CONTEXT, chat
 
 setup_logging()

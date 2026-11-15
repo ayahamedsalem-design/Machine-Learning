@@ -1,13 +1,10 @@
 import os
-from openai import OpenAI
-from dotenv import load_dotenv
 
+from RAGs.extract_and_chunk_pdf import initialize_api
 
-load_dotenv()
-api_key = os.getenv("OPENROUTER_API_KEY")
+client_ai = initialize_api()
 
-client_ai = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key, timeout=30)
-
+CHAT_MODEL = os.getenv("CHAT_MODEL")
 
 def summarize_cross_file_history(history_text):
     """Summarizes the provided chat history using the remote Nemotron model."""
@@ -24,7 +21,7 @@ def summarize_cross_file_history(history_text):
 
     # Reuse the OpenRouter client_ai and Nemotron lightning model
     completion = client_ai.chat.completions.create(
-        model="nvidia/nemotron-3.5-lightning:free",
+        model=CHAT_MODEL,
         messages=messages_to_send,
         temperature=0.3,
     )
